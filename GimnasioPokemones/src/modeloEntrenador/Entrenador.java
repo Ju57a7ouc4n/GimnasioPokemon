@@ -8,15 +8,6 @@ import modeloExcepciones.EntrenadorSinPokemonesException;
 import modeloInterfaces.Clasificable;
 import modeloPokemon.Pokemon;
 
-/**
- * Representa a un Entrenador Pokémon que puede poseer una lista de pokemones,
- * enfrentarse a otros entrenadores, comprar pokemones y calcular su categoría.
- */
-
-/**
- * IMPORTANTE: No esta implementada la funcion de manejar hechizos.
- */
-
 public class Entrenador implements Clasificable, Cloneable {
 
     private String nombre;
@@ -83,49 +74,6 @@ public class Entrenador implements Clasificable, Cloneable {
 
     public List<Pokemon> getPokemones() {
         return pokemones;
-    }
-
-    /**
-     * Realiza un enfrentamiento con otro entrenador.
-     * 
-     * @param otro El entrenador rival.
-     * @return El entrenador ganador.
-     * @throws EntrenadorSinPokemonesException si alguno de los entrenadores no tiene pokemones.
-     */
-    public Entrenador enfrentar(Entrenador otro) throws EntrenadorSinPokemonesException {
-        if (this.pokemones.isEmpty())
-            throw new EntrenadorSinPokemonesException(this);
-        if (otro.pokemones.isEmpty())
-            throw new EntrenadorSinPokemonesException(otro);
-
-        int i = 0, j = 0;
-
-        while (i < 3 && i < this.pokemones.size() && j < 3 && j < otro.pokemones.size()) {
-            Pokemon p1 = this.pokemones.get(i);
-            Pokemon p2 = otro.pokemones.get(j);
-
-            while (p1.estaVivo() && p2.estaVivo()) {
-                p1.atacar(p2);
-                if (p2.estaVivo()) {
-                    p2.atacar(p1);
-                }
-            }
-
-            if (p1.estaVivo()) {
-                p1.ganarExperiencia();
-                j++;
-            } else {
-                i++;
-            }
-        }
-
-        if (i == 3 || i >= this.pokemones.size()) {
-            otro.agregarCreditos(500);
-            return otro;
-        } else {
-            this.agregarCreditos(500);
-            return this;
-        }
     }
 
     /**
