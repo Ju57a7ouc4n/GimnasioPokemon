@@ -11,7 +11,7 @@ import modeloPokemon.PokemonPiedra;
  * enfrentarse a otros entrenadores, comprar pokemones y calcular su categoría.
  */
 
-public class Entrenador implements Clasificable, Cloneable {
+public class Entrenador implements Clasificable, Cloneable, java.io.Serializable {
 
     private String nombre;
     public ArrayList<Pokemon> pokemones;

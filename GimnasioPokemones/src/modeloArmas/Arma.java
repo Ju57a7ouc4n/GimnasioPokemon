@@ -4,7 +4,7 @@ package modeloArmas;
 import modeloInterfaces.Hostil;
 import modeloInterfaces.Valuable;
 
-public abstract class Arma implements Hostil, Valuable, Cloneable {
+public abstract class Arma implements Hostil, Valuable, Cloneable, java.io.Serializable {
 
     private int costo;
 

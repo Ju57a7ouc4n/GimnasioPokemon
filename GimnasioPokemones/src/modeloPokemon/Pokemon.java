@@ -7,7 +7,7 @@ import modeloArmas.Arma;
 
 /**Clase abstracta parar representar un pokemon con atributos y metodos comunes para todos **/
 
-public abstract class Pokemon implements Hostil, Valuable, Clasificable, Cloneable, IHechizable {
+public abstract class Pokemon implements Hostil, Valuable, Clasificable, Cloneable, IHechizable, java.io.Serializable {
 	
 	protected String nombre;
 	protected int experiencia;
