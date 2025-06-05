@@ -3,8 +3,9 @@ import modeloInterfaces.Clasificable;
 import modeloInterfaces.Valuable;
 import modeloInterfaces.Hostil;
 import modeloHechizos.IHechizable;
+import modeloArmas.Arma;
 
-/**Clase abstracta parar epresentar un pokemon con atributos y metodos comunes para todos **/
+/**Clase abstracta parar representar un pokemon con atributos y metodos comunes para todos **/
 
 public abstract class Pokemon implements Hostil, Valuable, Clasificable, Cloneable, IHechizable {
 	
@@ -13,39 +14,38 @@ public abstract class Pokemon implements Hostil, Valuable, Clasificable, Cloneab
 	protected double escudo;
 	protected double vitalidad;
 	protected double fuerza;
+    protected int costo;
+    protected boolean esArmable;
 	
 	protected double escudoBase;
 	protected double vitalidadBase;
 	protected double fuerzaBase;
-	//podriamos sacarlos
+
 	
 	/**
-	 * Constructor base para pokemon 					
+	 * Constructor base para pokemones.					
 	 * @param nombre	
 	 * @param experiencia
 	 * @param escudo
 	 * @param vitalidad
 	 * @param fuerzaAtaque
+	 * @param esArmable
 	 */
 	
-	
-	public Pokemon (String nombre, int experiencia, double escudo, double vitalidad, double fuerza) {
+
+
+	public Pokemon (String nombre, double escudo, double vitalidad, double fuerza, int costo, boolean esArmable) {
 		this.nombre = nombre;
-		this.experiencia = experiencia;
+		this.experiencia = 0; 
 		this.escudo = escudo;
 		this.vitalidad = vitalidad;
 		this.fuerza = fuerza;
+        this.costo = costo;
 		this.escudoBase = escudo;
 		this.vitalidadBase = vitalidad;
 		this.fuerzaBase = fuerza;
+        this.esArmable = esArmable;
 	}
-	
-    public void ganarExperiencia() {
-    	/**
-    	 * Aumenta la experiencia del Pokémon en 1 punto.
-    	 */
-        this.experiencia++;
-    }
 
     /**
      * Devuelve el nombre del Pokémon.
@@ -67,7 +67,7 @@ public abstract class Pokemon implements Hostil, Valuable, Clasificable, Cloneab
 
     /**
      * Aplica daño al Pokémon, ajustando escudo y vitalidad.
-     * Este método será redefinido por las subclases según su tipo.
+     * Método abstracto será redefinido por las subclases según su tipo.
      * 
      * @param danio Cantidad de daño recibido.
      */
@@ -77,6 +77,40 @@ public abstract class Pokemon implements Hostil, Valuable, Clasificable, Cloneab
      * Restaura los valores base del Pokémon.
      */
     public abstract void recargar();
+
+    /**
+     * Template que implementa el ataque de los pokemones.
+     * ejecutarAtaque(): ataca al pokemon adversario.
+     * pierdeFuerza(): metodo hook que implementan los pokemones que pierden fuerza al atacar.
+     * @param adversario el pokemon que recibe el ataque.
+     */
+    @Override
+    public void atacar(Pokemon adversario){
+
+        ejecutarAtaque(adversario);
+
+        pierdeFuerza();
+
+    }
+    
+    
+    /**
+     * Ataca al pokemon adversario
+     * @param adversario
+     */
+    public abstract void ejecutarAtaque(Pokemon adversario);
+
+    /**
+     *  Metodo hook que solo implementan los pokemones que pierden fuerza al atacar.
+     */
+    public void pierdeFuerza(){}
+
+    /**
+     * Metodo delegado que incrementa la experiencia de un pokemon luego de derrotar a otro pokemon.
+     */
+    public void ganarExperiencia() {
+        this.experiencia++;
+    }
 
     /**
      * Devuelve la categoría del Pokémon (basada en su experiencia).
@@ -94,7 +128,13 @@ public abstract class Pokemon implements Hostil, Valuable, Clasificable, Cloneab
      * @return costo como double.
      */
     @Override
-    public abstract double getCosto();
+    public double getCosto() {
+        return costo;
+    }
+
+    public void setCosto(int valor) {
+        this.costo = valor;
+    }
     
     /**
      * Indica si el Pokémon sigue con vida (vitalidad mayor a 0).
@@ -105,14 +145,23 @@ public abstract class Pokemon implements Hostil, Valuable, Clasificable, Cloneab
         return this.vitalidad > 0;
     }
 
+    public void setArma(Arma arma){} // Método vacío para ser redefinido por subclases que usan armas.
+
+    public Arma getArma() {
+        return null; 
+    } // Método vacío para ser redefinido por subclases que usan armas.
 
     /**
-     * Ataca al Pokémon adversario.
-     * 
-     * @param adversario El Pokémon a atacar.
+     * Metodo que determina si un pokemon puede poseer un arma. 
+     * @return true si puede tener un arma / false si no puede tener un arma.
      */
-    @Override
-    public abstract void atacar(Pokemon adversario);
+    public boolean Esarmable() {
+        return this.esArmable;
+    }
+
+    public void setEsArmable(boolean esArmable) {
+        this.esArmable = esArmable;
+    }
 
     /**
      * Retorna una copia del Pokémon si puede ser clonado.
@@ -120,12 +169,13 @@ public abstract class Pokemon implements Hostil, Valuable, Clasificable, Cloneab
      * @return copia del Pokémon o null si no es clonable.
      */
     @Override
-    public Pokemon clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         return (Pokemon) super.clone();
     }
     
-    @Override
+    
     public String toString() {
         return nombre + " (EXP: " + experiencia + ", VIT: " + vitalidad + ", ESC: " + escudo + ", ATQ: " + fuerza + ")";
-    }
+    }  
+    
 }

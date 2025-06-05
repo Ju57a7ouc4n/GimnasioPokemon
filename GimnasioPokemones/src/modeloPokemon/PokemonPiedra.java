@@ -1,17 +1,17 @@
 package modeloPokemon;
 
-import modeloArmas.Arma;
-import modeloArmas.ArmaCloneable;
+import Utils.Redondear;
+import modeloArmas.*;
 
 /**
  * Representa un Pokémon de tipo Piedra.
  */
 public class PokemonPiedra extends Pokemon {
 
-    private Arma arma;
+    private Arma arma = null;
 
     public PokemonPiedra(String nombre) {
-        super(nombre, 0, 300, 600, 150);
+        super(nombre, 300, 600, 150, 200, true);
     }
 
     public void setArma(Arma arma) {
@@ -19,63 +19,81 @@ public class PokemonPiedra extends Pokemon {
     }
 
     @Override
-    public void atacar(Pokemon adversario) {
+    public Arma getArma() {
+        return this.arma;
+    }
+
+    @Override
+    public void ejecutarAtaque(Pokemon adversario) {
         if (arma != null) {
             arma.atacar(adversario);
         } else {
-            double danio = this.fuerza * 0.15;
+            double danio = Redondear.redondear(this.fuerza * .15);
             adversario.recibirDanio(danio);
-            this.fuerza *= 0.95;
         }
+    }
+
+    @Override
+    public void pierdeFuerza() {
+        this.fuerza = Redondear.redondear(this.fuerza * .95);
     }
 
     @Override
     public void recibirDanio(double danio) {
-        if (escudo > 0) {
-            escudo -= danio * 0.75;
-            vitalidad -= danio * 0.25;
+        if ((this.escudo - (danio * .75)) > 0) {
+            this.escudo -= danio * 0.75;
+            this.vitalidad -= danio * 0.25;
+            this.escudo = Redondear.redondear(this.escudo);
         } else {
-            vitalidad -= danio;
+            this.vitalidad -= (danio *.75) - this.escudo;
+            this.escudo = 0;
         }
+        this.vitalidad = Redondear.redondear(this.vitalidad);
     }
 
     @Override
     public void recargar() {
-        escudo = Math.min(escudoBase * 2, escudoBase * 0.8 + escudoBase * 0.1 * experiencia);
-        vitalidad = Math.min(vitalidadBase * 2, vitalidadBase * 0.8 + vitalidadBase * 0.1 * experiencia);
-        fuerza = Math.min(fuerzaBase * 2, fuerzaBase * 0.8 + fuerzaBase * 0.1 * experiencia);
-    }
-
-    @Override
-    public PokemonPiedra clone() {
-        if (arma != null && !(arma instanceof ArmaCloneable)) {
-            throw new UnsupportedOperationException("Este Pokémon de Piedra no es clonable por su arma.");
-        }
-        PokemonPiedra copia = new PokemonPiedra(this.nombre);
-        if (arma instanceof ArmaCloneable) {
-            copia.setArma(((ArmaCloneable) arma).cloneArma());
-        }
-        return copia;
-    }
-
-    @Override
-    public double getCosto() {
-        return 2500; // ejemplo
+        this.escudo = Math.min(this.escudoBase * 2, this.escudoBase * 0.8 + this.escudoBase * 0.1 * this.experiencia);
+        this.vitalidad = Math.min(this.vitalidadBase * 2, this.vitalidadBase * 0.8 + this.vitalidadBase * 0.1 * this.experiencia);
+        this.fuerza = Math.min(this.fuerzaBase * 2, this.fuerzaBase * 0.8 + this.fuerzaBase * 0.1 * this.experiencia);
+        this.escudo = Redondear.redondear(this.escudo);
+        this.vitalidad = Redondear.redondear(this.vitalidad);
+        this.fuerza = Redondear.redondear(this.fuerza);
     }
 
 	@Override
 	public void serHechizadoNiebla() {
-		this.fuerza*=.4;
+		this.fuerza = Redondear.redondear(this.fuerza * .4);
 	}
 
 	@Override
 	public void serHechizadoViento() {
-		this.vitalidad*=.25;
+		this.vitalidad = Redondear.redondear(this.vitalidad * .25);
 	}
 
 	@Override
 	public void serHechizadoTormenta() {
-		this.escudo=0;
-		this.fuerza*=.7;
+		this.escudo = 0;
+		this.fuerza = Redondear.redondear(this.fuerza * .7);
 	}
+
+    @Override
+    public PokemonPiedra clone () {
+        PokemonPiedra copia = null;
+        try {
+            copia = (PokemonPiedra) super.clone();
+            copia.arma = (Arma) this.arma.clone();
+        } catch (CloneNotSupportedException e){}
+        return copia;
+    }
+
+    @Override
+    public String toString() {
+        if (arma == null) {
+            return super.toString() + " No tiene arma\n";
+        }
+        else{
+            return super.toString() + " " + arma.toString();
+        }
+    }
 }

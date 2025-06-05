@@ -1,14 +1,13 @@
 package modeloHechizos;
-import modeloPokemon.Pokemon;
 
-public class HechizoViento extends Hechizo{
+public class HechizoViento implements Hechizo{
 	
 	public HechizoViento() {
 		super();
 	}
 
 	@Override
-	public void usarHechizo(Pokemon pokemon) {
-		pokemon.serHechizadoViento();
+	public void usarHechizo(IHechizable hechizable) {
+		hechizable.serHechizadoViento();
 	}	
 }

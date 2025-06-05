@@ -3,17 +3,33 @@ package modeloArmas;
 import modeloPokemon.Pokemon;
 
 /**
- * Espada: inflige 10 puntos de daño directo.
+ * Espada: inflige 100 puntos de daño directo.
  */
-public class Espada implements ArmaCloneable {
+public class Espada extends Arma {
 
-    @Override
-    public void atacar(Pokemon adversario) {
-        adversario.recibirDanio(10);
+    public Espada() {
+        super(50);
     }
 
     @Override
-    public Arma cloneArma() {
-        return (Arma) new Espada();
+    public void atacar (Pokemon adversario) {
+        adversario.recibirDanio(100);
     }
+
+    @Override
+    public Object clone () {
+        Object espada = null;
+        try {
+            espada = super.clone();
+        }
+        catch (CloneNotSupportedException e){}
+        return espada;
+    }
+
+    public String toString() {
+        return "Espada{" +
+                "costo=" + getCosto() +
+                '}';
+    }
+
 }

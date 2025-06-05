@@ -1,7 +1,17 @@
+package modeloArenas;
+
+
 public class ArenaSelva extends Arena {
 
-    public ArenaSelva(String nombre, String dificultad) {
-        super(nombre, "Selva", dificultad);
-        this.PREMIO = 800;
+    public ArenaSelva(String nombre) {
+        super(nombre);
+        this.premio = 800;
     }
+
+	@Override
+	public String getDetalle() {
+		return "Una densa jungla tropical donde el combate se desarrolla entre raíces gruesas, niebla húmeda y vegetación abundante. La humedad lo impregna todo y los rugidos de bestias lejanas intimidan incluso a los más valientes.\n";
+	}
+    
+    
 }

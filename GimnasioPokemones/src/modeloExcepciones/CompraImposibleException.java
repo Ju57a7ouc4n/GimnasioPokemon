@@ -6,8 +6,12 @@ package modeloExcepciones;
  */
 public class CompraImposibleException extends Exception {
 
-    private double creditosDisponibles;
-    private double costoPokemon;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5774629654707624036L;
+	private double creditosDisponibles;
+    private double costo;
 
     /**
      * Constructor de la excepción.
@@ -15,10 +19,10 @@ public class CompraImposibleException extends Exception {
      * @param creditosDisponibles Créditos que posee el entrenador.
      * @param costoPokemon        Costo del Pokémon que desea comprar.
      */
-    public CompraImposibleException(double creditosDisponibles, double costoPokemon) {
-        super("No se puede comprar el Pokémon. Créditos: " + creditosDisponibles + ", Costo: " + costoPokemon);
+    public CompraImposibleException(double creditosDisponibles, double costo, String mensaje) {
+        super("Compra imposible: creditos disponibles " + creditosDisponibles + " Costo " + mensaje + " " + costo);
         this.creditosDisponibles = creditosDisponibles;
-        this.costoPokemon = costoPokemon;
+        this.costo = costo;
     }
 
     /**
@@ -36,6 +40,6 @@ public class CompraImposibleException extends Exception {
      * @return costo del Pokémon.
      */
     public double getCostoPokemon() {
-        return costoPokemon;
+        return costo;
     }
 }

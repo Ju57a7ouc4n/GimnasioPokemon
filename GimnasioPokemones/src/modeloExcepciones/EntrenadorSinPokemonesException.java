@@ -7,7 +7,11 @@ import modeloEntrenador.Entrenador;
  */
 public class EntrenadorSinPokemonesException extends Exception {
 
-    private Entrenador entrenador;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -9072153318757394190L;
+	private Entrenador entrenador;
 
     /**
      * Constructor de la excepción.

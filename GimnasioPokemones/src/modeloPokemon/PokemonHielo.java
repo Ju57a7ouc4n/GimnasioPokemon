@@ -1,27 +1,37 @@
 package modeloPokemon;
 
+import Utils.Redondear;
+
+
 /**
  * Representa un Pokémon de tipo Hielo.
  */
 public class PokemonHielo extends Pokemon {
 
     public PokemonHielo(String nombre) {
-        super(nombre, 0, 120, 400, 100);
+        super(nombre, 120, 400, 100, 100, false);
     }
 
     @Override
-    public void atacar(Pokemon adversario) {
-        double danio = this.fuerza * 0.15;
+    public void ejecutarAtaque(Pokemon adversario){
+        double danio = Redondear.redondear(this.fuerza * .15);
         adversario.recibirDanio(danio);
-        this.fuerza *= 0.95;
+
     }
+
+    @Override
+    public void pierdeFuerza(){
+        this.fuerza = Redondear.redondear(this.fuerza * .95);       
+    }
+    
 
     @Override
     public void recibirDanio(double danio) {
-        if (escudo > 0) {
-            escudo -= danio;
+        if ((this.escudo - danio) > 0) {
+            this.escudo -= danio;
         } else {
-            vitalidad -= danio;
+            this.vitalidad -= danio - this.escudo;
+            this.escudo = 0;            
         }
     }
 
@@ -32,31 +42,32 @@ public class PokemonHielo extends Pokemon {
         this.escudo += 100;
     }
 
-    @Override
-    public PokemonHielo clone() {
-        return new PokemonHielo(this.nombre);
-    }
-
-    @Override
-    public double getCosto() {
-        return 1800; // ejemplo
-    }
-
 	@Override
 	public void serHechizadoNiebla() {
-		this.vitalidad*=.4;	
+		this.vitalidad = Redondear.redondear(this.vitalidad * .4);	
 	}
 
 	@Override
 	public void serHechizadoViento() {
-		this.vitalidad*=.8;
-		this.fuerza*=.8;
+		this.vitalidad = Redondear.redondear(this.vitalidad * .8);
+		this.fuerza = Redondear.redondear(this.fuerza * .8);
 	}
 
 	@Override
 	public void serHechizadoTormenta() {
-		this.escudo*=.2;
+		this.escudo = Redondear.redondear(this.escudo * .2);
 	}
+
+    @Override
+    public PokemonHielo clone () {
+        PokemonHielo copia = null;
+        try {
+            copia = (PokemonHielo) super.clone();
+        }
+        catch (CloneNotSupportedException e){}
+        return copia;
+    }
     
+
     
 }
