@@ -1,6 +1,8 @@
 package modeloArenas;
 
-public abstract class Decorator implements IArena{
+import java.io.Serializable;
+
+public abstract class Decorator implements IArena, Serializable{
     public IArena arena;
 
 	public Decorator(IArena arena) {

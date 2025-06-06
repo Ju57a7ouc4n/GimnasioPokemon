@@ -1,6 +1,6 @@
 package modeloArenas;
 
-public interface IArena {
+public interface IArena{
 	double getPremio();
 	
 	String getNombre();

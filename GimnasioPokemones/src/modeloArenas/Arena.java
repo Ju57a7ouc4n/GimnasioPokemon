@@ -1,6 +1,8 @@
 package modeloArenas;
 
-public abstract class Arena implements IArena{
+import java.io.Serializable;
+
+public abstract class Arena implements IArena, Serializable{
     protected String nombre;
     protected double premio;
     protected boolean ocupada = false;

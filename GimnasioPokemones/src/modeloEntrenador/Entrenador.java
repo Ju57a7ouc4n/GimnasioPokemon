@@ -3,8 +3,6 @@ package modeloEntrenador;
 import java.util.ArrayList;
 import modeloInterfaces.Clasificable;
 import modeloPokemon.Pokemon;
-import modeloArmas.*;
-import modeloPokemon.PokemonPiedra;
 
 /**
  * Representa a un Entrenador Pokémon que puede poseer una lista de pokemones,

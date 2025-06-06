@@ -3,10 +3,24 @@ package Mercados;
 import modeloArmas.*;
 import modeloPokemon.*;
 import modeloEntrenador.Entrenador;
+
+import java.io.Serializable;
 import java.util.Scanner;
 import modeloExcepciones.CompraImposibleException;
 
-public class Mercado {
+public class Mercado implements Serializable{
+	private static Mercado instancia;
+	
+	 private Mercado(){
+		 super();
+	 }
+	    
+	 public static Mercado getInstance() {
+		 if (instancia == null) {
+			 instancia = new Mercado();
+	     }
+	     return instancia;
+	 }
 
     public void compras(Entrenador entrenador){
         Scanner scanner = new Scanner(System.in);
@@ -127,5 +141,9 @@ public class Mercado {
         entrenador.setCreditos(entrenador.getCreditos() - valor);
         entrenador.getPokemon(posPokemonArmable).setArma(arma);
         System.out.println("Arma comprada y agreagada al pokemon " + entrenador.getPokemon(posPokemonArmable).getNombre());
+    }
+    
+    public static void setInstancia(Mercado nueva){
+    	instancia=nueva;
     }
 }

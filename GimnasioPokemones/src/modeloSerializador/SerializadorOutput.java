@@ -4,11 +4,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import modeloArenas.GestorDeArenas;
 import modeloArenas.IArena;
 import modeloEntrenador.Entrenador;
 import modeloPokemon.Pokemon;
+import modeloTorneo.Torneo;
 
-public class serializadorOutput {
+public class SerializadorOutput {
 	private FileOutputStream file;
 	private ObjectOutputStream output;
 	
@@ -23,18 +25,20 @@ public class serializadorOutput {
 			output.close();
 	}
 	
-	public void escribirPokemon(Pokemon pokemon) throws IOException{
+	public void escribirTorneo(Torneo torneo) throws IOException{
 		if(output!=null)
-			output.writeObject(pokemon);
+			output.writeObject(torneo);
 	}
 	
-	public void escribirEntrenador(Entrenador entrenador) throws IOException{
-		if(output!=null)
-			output.writeObject(entrenador);
+	void guardarPartida(Torneo torneo) throws IOException{
+		
+		abrir();
+		
+		if(output != null) {
+			escribirTorneo(torneo);
+		}
+		
+		cerrar();
 	}
 	
-	public void escribirBatalla(IArena arena) throws IOException{
-		if(output!=null)
-			output.writeObject(arena);
-	}
 }

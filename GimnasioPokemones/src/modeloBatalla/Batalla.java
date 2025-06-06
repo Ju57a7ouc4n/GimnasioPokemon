@@ -7,10 +7,11 @@ import modeloArenas.IArena;
 import modeloExcepciones.EntrenadorSinPokemonesException;
 import modeloPokemon.Pokemon;
 public class Batalla extends Thread {
-	Entrenador entrenadorA;
-	Entrenador entrenadorB;
-	EntrenadorPreparado entrenador1;
-	EntrenadorPreparado entrenador2;
+	protected Entrenador entrenadorA;
+	protected Entrenador entrenadorB;
+	protected EntrenadorPreparado entrenador1;
+	protected EntrenadorPreparado entrenador2;
+	public Entrenador ganador = null;
     private GestorDeArenas gestorArenas;
 
     public Batalla(Entrenador entrenador1, Entrenador entrenador2, GestorDeArenas gestorArenas) {
@@ -37,7 +38,7 @@ public class Batalla extends Thread {
     public void run() { 
         try {
             IArena arena = gestorArenas.asignarArenaLibre();
-            Entrenador ganador = enfrentarEntrenadores(entrenador1, entrenador2, arena);
+            this.ganador = enfrentarEntrenadores(entrenador1, entrenador2, arena);
             /*
              * ACA EL CONTROLADOR LE AVISA A LA VENTANA QUIEN ES EL GANADOR
             */

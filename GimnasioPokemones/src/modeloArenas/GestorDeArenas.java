@@ -1,8 +1,9 @@
 package modeloArenas;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class GestorDeArenas {
+public class GestorDeArenas implements Serializable{
     private ArrayList<IArena> arenas;
     private static GestorDeArenas instancia;
 
@@ -74,5 +75,9 @@ public class GestorDeArenas {
                 return true;
         }
         return false;
+    }
+    
+    public static void setInstancia(GestorDeArenas nueva){
+    	instancia=nueva;
     }
 }
