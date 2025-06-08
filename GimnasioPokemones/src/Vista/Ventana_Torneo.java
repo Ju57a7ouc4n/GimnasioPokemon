@@ -3,6 +3,7 @@ package Vista;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -36,8 +37,7 @@ public class Ventana_Torneo extends JFrame {
 		setSize(1000,600);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setIconImage(new ImageIcon("E:\\GimnasioPokemon-main\\Images\\Imagen_Ventana_Inicio.PNG").getImage());
-		setIconImage(Icono_Ventana.getIconoVentana());
+		//setIconImage(new ImageIcon("/Images/Imagen_Ventana_Inicio.PNG").getImage());
 		
 		getContentPane().setLayout(new GridLayout(0, 2, 0, 0));
 		

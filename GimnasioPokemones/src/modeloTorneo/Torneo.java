@@ -20,9 +20,7 @@ public class Torneo extends Observable implements Serializable{
 	public Torneo(){
 		tienda = Mercado.getInstance();
 		gestorDeArenas = GestorDeArenas.getInstance();
-		/*
-		 * A PARTIR DE LA VENTANA ACA SE AÑADEN LOS ENTRENADORES
-		 * */
+		this.entrenadores = new ArrayList<Entrenador>(); 
 	}
 	public Torneo getTorneo(){
 		return this;
@@ -81,6 +79,16 @@ public class Torneo extends Observable implements Serializable{
 		return this.entrenadores;
 	}
 
+	public Entrenador getEntrenador(String nombre) {
+		int i=0;
+		while(entrenadores.get(i)!=null && i<entrenadores.size() && entrenadores.get(i).getNombre().equals(nombre))
+			i++;
+		if(entrenadores.get(i).getNombre().equals(nombre))
+			return entrenadores.get(i);
+		else
+			return null;
+	}	
+	
 	public void setEntrenadores(ArrayList<Entrenador> entrenadores) {
 		this.entrenadores = entrenadores;
 	}
@@ -118,4 +126,14 @@ public class Torneo extends Observable implements Serializable{
         notifyObservers(entrenadores);
     }
 	
+    public void eliminarEntrenador(int index) {
+        entrenadores.remove(index);
+        setChanged();
+        notifyObservers(entrenadores);
+    }
+    
+    public void forzarActualizacion(){
+    	setChanged();
+        notifyObservers(entrenadores);
+    }
 }
