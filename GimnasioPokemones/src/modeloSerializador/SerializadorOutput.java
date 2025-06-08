@@ -30,7 +30,7 @@ public class SerializadorOutput {
 			output.writeObject(torneo);
 	}
 	
-	void guardarPartida(Torneo torneo) throws IOException{
+	public void guardarPartida(Torneo torneo) throws IOException{
 		
 		abrir();
 		
