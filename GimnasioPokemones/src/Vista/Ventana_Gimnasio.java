@@ -17,9 +17,9 @@ import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -37,6 +37,8 @@ import java.awt.Font;
 import java.awt.FlowLayout;
 import javax.swing.SwingConstants;
 import javax.swing.JList;
+import javax.swing.JCheckBox;
+import javax.swing.JRadioButton;
 
 public class Ventana_Gimnasio extends JFrame implements ActionListener, Observer {
 
@@ -57,18 +59,28 @@ public class Ventana_Gimnasio extends JFrame implements ActionListener, Observer
 	private JTextField Nombre_Entrenador_TextField;
 	private JButton Crea_Entrenador_Button;
 	private JButton Elimina_Entrenador_Button;
-	private JButton confirmaCompraButton;
 	private JButton Entra_Torneo_Button; 
-	private JLabel Nombre_Pokemon_Label;
 	private static Mundo controlador;
 	private JLabel EntrenadoresFaltantes_Label;
-	private JList Entrenadores_List;
+	private JList<String> Entrenadores_List;
 	private DefaultListModel<String> entrenadoresModel;
 	private JButton GuardarPartidaButton;
 	private JButton CargarPartidaButton;
 	private JPanel panel;
 	private JPanel panel_1;
 	private JComboBox<String> entrenadorCombo;
+	private JPanel panel_2;
+	private JButton CreaArenaButton;
+	private JPanel panel_NombreArena;
+	private JTextField textFieldNombreArena;
+	private JLabel ArenaLabel;
+	private JPanel panel_3;
+	private JRadioButton DesiertoCheckBox;
+	private JRadioButton BosqueCheckBox;
+	private JRadioButton SelvaCheckBox;
+	private JRadioButton MedioButton;
+	private JRadioButton DificilButton;
+	private JRadioButton facilButton;
 	/**
 	 * Launch the application.
 	 */
@@ -341,11 +353,11 @@ public class Ventana_Gimnasio extends JFrame implements ActionListener, Observer
 		    });
 		    
 		    // ======= Agregar todo al panel =======
-		    panel_Compras.add(Box.createVerticalStrut(10));
+		  /*  panel_Compras.add(Box.createVerticalStrut(10));
 		    panel_Compras.add(labelSeleccion);
 		    panel_Compras.add(entrenadorCombo);
 		    panel_Compras.add(Box.createVerticalStrut(20));
-
+		   */ 
 		    panel_Compras.add(tituloPokemon);
 		    panel_Compras.add(tipoCombo);
 		    panel_Compras.add(nombreLabel);
@@ -378,6 +390,96 @@ public class Ventana_Gimnasio extends JFrame implements ActionListener, Observer
 		this.panel_Entra_Torneo.setBorder(BorderFactory.createTitledBorder("Torneo"));
 		this.Entra_Torneo_Button.addActionListener(this);
 		this.Entra_Torneo_Button.setEnabled(false);
+		
+		this.panel_2 = new JPanel();
+		this.panel_Entra_Torneo.add(this.panel_2);
+		this.panel_2.setLayout(new BorderLayout(0, 0));
+		
+		this.CreaArenaButton = new JButton("Crear Arena");
+		this.panel_2.add(this.CreaArenaButton, BorderLayout.SOUTH);
+		this.CreaArenaButton.addActionListener(l -> {
+		    String nombreArena = textFieldNombreArena.getText().trim();
+		    
+		    if (nombreArena.isEmpty()) {
+		        JOptionPane.showMessageDialog(this, "Debe ingresar un nombre para la arena.");
+		        return;
+		    }
+
+		    String tipo = null;
+		    if (DesiertoCheckBox.isSelected()) tipo = "Desierto";
+		    else if (BosqueCheckBox.isSelected()) tipo = "Bosque";
+		    else if (SelvaCheckBox.isSelected()) tipo = "Selva";
+		    
+		    String dificultad = null;
+		    if (facilButton.isSelected()) tipo = "Facil";
+		    else if (MedioButton.isSelected()) tipo = "Medio";
+		    else if (DificilButton.isSelected()) tipo = "Dificil";
+		    
+		    if (tipo == null) {
+		        JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de terreno para la arena.");
+		        return;
+		    }
+		    System.out.println("Arena creada: " + nombreArena + " - Tipo: " + tipo);
+		    controlador.crearArena(nombreArena, tipo, dificultad);
+
+		    textFieldNombreArena.setText("");
+		});
+		
+		this.panel_NombreArena = new JPanel();
+		this.panel_2.add(this.panel_NombreArena, BorderLayout.NORTH);
+		
+		this.textFieldNombreArena = new JTextField();
+		this.panel_NombreArena.add(this.textFieldNombreArena);
+		this.textFieldNombreArena.setColumns(10);
+		this.CreaArenaButton.setEnabled(false); // Inicialmente deshabilitado
+
+		this.textFieldNombreArena.getDocument().addDocumentListener(new DocumentListener() {
+		    private void actualizarEstadoBoton() {
+		        CreaArenaButton.setEnabled(!textFieldNombreArena.getText().trim().isEmpty());
+		    }
+
+		    @Override
+		    public void insertUpdate(DocumentEvent l) { actualizarEstadoBoton(); }
+		    @Override
+		    public void removeUpdate(DocumentEvent l) { actualizarEstadoBoton(); }
+		    @Override
+		    public void changedUpdate(DocumentEvent l) { actualizarEstadoBoton(); }
+		});
+		
+		this.ArenaLabel = new JLabel("Nombre de la Arena");
+		this.panel_NombreArena.add(this.ArenaLabel);
+		
+		this.panel_3 = new JPanel();
+		this.panel_2.add(this.panel_3, BorderLayout.CENTER);
+		this.panel_3.setLayout(new GridLayout(3, 3, 0, 0));
+		
+		this.facilButton = new JRadioButton("Facil");
+		this.panel_3.add(this.facilButton);
+		
+		this.DesiertoCheckBox = new JRadioButton("Desierto");
+		this.panel_3.add(this.DesiertoCheckBox);
+		
+		ButtonGroup grupoTerrenos = new ButtonGroup();
+		ButtonGroup grupoDificultades = new ButtonGroup();
+		grupoTerrenos.add(this.DesiertoCheckBox);
+		
+		this.MedioButton = new JRadioButton("Medio");
+		this.panel_3.add(this.MedioButton);
+		
+		this.BosqueCheckBox = new JRadioButton("Bosque");
+		this.panel_3.add(this.BosqueCheckBox);
+		grupoTerrenos.add(this.BosqueCheckBox);
+		
+		this.DificilButton = new JRadioButton("Dificil");
+		this.panel_3.add(this.DificilButton);
+		
+		this.SelvaCheckBox = new JRadioButton("Selva");
+		this.panel_3.add(this.SelvaCheckBox);
+		grupoTerrenos.add(this.SelvaCheckBox);
+		
+		grupoDificultades.add(this.facilButton);
+		grupoDificultades.add(this.MedioButton);
+		grupoDificultades.add(this.DificilButton);
 		
 		if(!this.Entra_Torneo_Button.isEnabled()) {
 			this.EntrenadoresFaltantes_Label = new JLabel("Se deben crear 8 entrenadores para acceder al torneo!");

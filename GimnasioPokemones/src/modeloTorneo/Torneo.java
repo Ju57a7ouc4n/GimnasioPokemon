@@ -82,7 +82,7 @@ public class Torneo extends Observable implements Serializable{
 
 	public Entrenador getEntrenador(String nombre) {
 		int i=0;
-		while(entrenadores.get(i)!=null && i<entrenadores.size() && entrenadores.get(i).getNombre().equals(nombre))
+		while(entrenadores.get(i)!=null && i<entrenadores.size() && !(entrenadores.get(i).getNombre().equals(nombre)))
 			i++;
 		if(entrenadores.get(i).getNombre().equals(nombre))
 			return entrenadores.get(i);

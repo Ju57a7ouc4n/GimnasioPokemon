@@ -18,33 +18,33 @@ public class GestorDeArenas implements Serializable{
         return instancia;
     }
     
-    public void nuevaArena(int ubicacion, int dificultad, String nombre){
+    public void nuevaArena(String ubicacion, String dificultad, String nombre){
         IArena arena = null;
         switch (ubicacion){
-        	case 0: switch (dificultad) {
-        		case 0: arena = new DificultadFacil(new ArenaBosque(nombre));
+        	case "Bosque": switch (dificultad) {
+        		case "Facil": arena = new DificultadFacil(new ArenaBosque(nombre));
         				break;
-        		case 1: arena = new DificultadMedio(new ArenaBosque(nombre));
+        		case "Medio": arena = new DificultadMedio(new ArenaBosque(nombre));
         				break;
-        		case 2: arena = new DificultadDificil(new ArenaBosque(nombre));
+        		case "Dificil": arena = new DificultadDificil(new ArenaBosque(nombre));
         				break;
         	}
         	break;
-        	case 1: switch (dificultad) {
-    			case 0: arena = new DificultadFacil(new ArenaDesierto(nombre));
+        	case "Desierto": switch (dificultad) {
+    			case "Facil": arena = new DificultadFacil(new ArenaDesierto(nombre));
     					break;
-    			case 1: arena = new DificultadMedio(new ArenaDesierto(nombre));
+    			case "Medio": arena = new DificultadMedio(new ArenaDesierto(nombre));
     					break;
-    			case 2: arena = new DificultadDificil(new ArenaDesierto(nombre));
+    			case "Dificil": arena = new DificultadDificil(new ArenaDesierto(nombre));
     					break;
         			}
         	break;
-        	case 2: switch (dificultad) {
-        		case 0: arena = new DificultadFacil(new ArenaSelva(nombre));
+        	case "Selva": switch (dificultad) {
+        		case "Facil": arena = new DificultadFacil(new ArenaSelva(nombre));
     					break;
-        		case 1: arena = new DificultadMedio(new ArenaSelva(nombre));
+        		case "Normal": arena = new DificultadMedio(new ArenaSelva(nombre));
     					break;
-        		case 2: arena = new DificultadDificil(new ArenaSelva(nombre));
+        		case "Dificil": arena = new DificultadDificil(new ArenaSelva(nombre));
     					break;
         			}
         	break;
@@ -80,4 +80,14 @@ public class GestorDeArenas implements Serializable{
     public static void setInstancia(GestorDeArenas nueva){
     	instancia=nueva;
     }
+
+	public ArrayList<IArena> getArenas() {
+		return arenas;
+	}
+
+	public void setArenas(ArrayList<IArena> arenas) {
+		this.arenas = arenas;
+	}
+    
+    
 }

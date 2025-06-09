@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import Mercados.Mercado;
+import Vista.Ventana_Batallas;
 import Vista.Ventana_Gimnasio;
 import Vista.Ventana_Inicio;
 import Vista.Ventana_Preparar_Entrenadores;
+import modeloArenas.GestorDeArenas;
+import modeloArenas.IArena;
 import modeloEntrenador.Entrenador;
 import modeloExcepciones.CompraImposibleException;
 import modeloPokemon.Pokemon;
@@ -89,8 +92,15 @@ public class Mundo{
 	}
 	
 	public void iniciarPreparar(Ventana_Preparar_Entrenadores vista) {
+		torneo.deleteObservers();
 		torneo.addObserver(vista);
-	    vista.update(null, null);
+	    torneo.forzarActualizacion();
+	}
+	
+	public void iniciarBatallas(Ventana_Batallas vista) {
+		torneo.deleteObservers();
+		torneo.addObserver(vista);
+	    torneo.forzarActualizacion();
 	}
 	
 	public void reiniciarGimnasio(Ventana_Gimnasio vista){
@@ -159,5 +169,14 @@ public class Mundo{
 	public void quitarPokemonDeCombate(int indexEntrenador, int indexPokemon) {
 		this.torneo.quitarPokemonDeCombate(indexEntrenador, indexPokemon);
 	}
+	
+	public void crearArena(String nombre, String tipo, String dificultad){
+		this.torneo.getGestorDeArenas().nuevaArena(tipo, dificultad, nombre);
+		
+	}
+	
+	public java.util.List<IArena> getArenas(){
+		return GestorDeArenas.getInstance().getArenas();
+	} 
 }
 

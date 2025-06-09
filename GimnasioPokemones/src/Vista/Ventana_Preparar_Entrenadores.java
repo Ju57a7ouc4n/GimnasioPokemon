@@ -71,6 +71,17 @@ public class Ventana_Preparar_Entrenadores extends JFrame implements ActionListe
 		
 		this.IniciarCombatesButton = new JButton("Iniciar Combates");
 		this.PanelEntrenadores.add(this.IniciarCombatesButton, BorderLayout.SOUTH);
+		
+		
+		
+		
+		this.PanelPokemonesDisponibles = new JPanel();
+		this.contentPane.add(this.PanelPokemonesDisponibles);
+		this.PanelPokemonesDisponibles.setBorder(BorderFactory.createTitledBorder("Pokemones Disponibles"));
+		this.PanelPokemonesDisponibles.setLayout(new BorderLayout(0, 0));
+		
+		this.ListaDePokemonesDisponibles = new JList();
+		this.PanelPokemonesDisponibles.add(this.ListaDePokemonesDisponibles, BorderLayout.CENTER);
 		this.ListaDeEntrenadores.addListSelectionListener(e -> {
 		    if (!e.getValueIsAdjusting()) {
 		        int selectedIndex = ListaDeEntrenadores.getSelectedIndex();
@@ -83,17 +94,6 @@ public class Ventana_Preparar_Entrenadores extends JFrame implements ActionListe
 		        }
 		    }
 		});
-		
-		
-		
-		this.PanelPokemonesDisponibles = new JPanel();
-		this.contentPane.add(this.PanelPokemonesDisponibles);
-		this.PanelPokemonesDisponibles.setBorder(BorderFactory.createTitledBorder("Pokemones Disponibles"));
-		this.PanelPokemonesDisponibles.setLayout(new BorderLayout(0, 0));
-		
-		this.ListaDePokemonesDisponibles = new JList();
-		this.PanelPokemonesDisponibles.add(this.ListaDePokemonesDisponibles, BorderLayout.CENTER);
-		
 		
 		this.AnadirACombateButton = new JButton("Añadir al Combate");
 		this.PanelPokemonesDisponibles.add(this.AnadirACombateButton, BorderLayout.SOUTH);
@@ -126,7 +126,6 @@ public class Ventana_Preparar_Entrenadores extends JFrame implements ActionListe
 		        controlador.quitarPokemonDeCombate(indexEntrenador, indexPokemon);
 		    }
 		});
-		
 		controlador.iniciarPreparar(this);
 	}
 
@@ -171,6 +170,10 @@ public class Ventana_Preparar_Entrenadores extends JFrame implements ActionListe
 	        if (indexPokemon != -1) {
 	            controlador.quitarPokemonDeCombate(indexEntrenador, indexPokemon);
 	        }
+	    }
+	    if (source == this.IniciarCombatesButton) {
+	        new Ventana_Batallas(controlador).setVisible(true);;
+	        dispose();
 	    }
 	}
 
