@@ -1,14 +1,18 @@
 package modeloMundo;
 
+import java.awt.List;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import Mercados.Mercado;
 import Vista.Ventana_Gimnasio;
 import Vista.Ventana_Inicio;
+import Vista.Ventana_Preparar_Entrenadores;
 import modeloEntrenador.Entrenador;
 import modeloExcepciones.CompraImposibleException;
+import modeloPokemon.Pokemon;
 import modeloSerializador.SerializadorInput;
 import modeloSerializador.SerializadorOutput;
 import modeloTorneo.Torneo;
@@ -41,7 +45,7 @@ public class Mundo{
 
 	public void cargarPartida(File archivo) {
 			try {
-				this.torneo = cargador.cargarPartida(archivo);
+				this.torneo = cargador.cargarPartida(archivo, this.torneo);
 			} catch (IOException | ClassNotFoundException e) {
 				System.err.println("Error al cargar partida: " + e.getMessage());
 				this.torneo = new Torneo(); // fallback
@@ -84,6 +88,11 @@ public class Mundo{
 		torneo.addObserver(vista);
 	}
 	
+	public void iniciarPreparar(Ventana_Preparar_Entrenadores vista) {
+		torneo.addObserver(vista);
+	    vista.update(null, null);
+	}
+	
 	public void reiniciarGimnasio(Ventana_Gimnasio vista){
 		torneo.deleteObservers();
 		torneo.addObserver(vista);
@@ -92,13 +101,63 @@ public class Mundo{
 	
 	public void comprarPokemon(String entrenador, String tipo, String nombre) throws CompraImposibleException{
 		Entrenador ref=torneo.getEntrenador(entrenador);
-		if(ref!=null)
+		if(ref!=null) {
 			mercado.compraPokemon(ref, tipo, nombre);
-		
+		}
+		torneo.forzarActualizacion();
+	}
+	
+	public void comprarArma(String entrenador, String tipo) throws CompraImposibleException{
+		Entrenador ref=torneo.getEntrenador(entrenador);
+		if(ref!=null)
+			mercado.compraArma(ref, tipo);
+		torneo.forzarActualizacion();
 	}
 	
 	public void forzarActualizacion(){
 		torneo.forzarActualizacion();
+	}
+	
+	public void iniciarRonda() throws InterruptedException{
+		this.torneo.iniciarRonda();
+	}
+	
+	public void prepararEntrenador(String entrenador, String pokemon){
+		Entrenador ref= torneo.getEntrenador(entrenador);
+		ref.elegirPokemonCombate(pokemon);
+	}
+	
+	public java.util.List<String> getNombresEntrenadores() {
+	    return torneo.getEntrenadores()
+	                 .stream()
+	                 .map(Entrenador::getNombre)
+	                 .collect(Collectors.toList());
+	}
+
+	public java.util.List<String> getPokemonesDelEntrenador(int index) {
+	    return torneo.getEntrenadores().get(index)
+	                 .getPokemones()
+	                 .stream()
+	                 .map(Pokemon::getNombre)
+	                 .collect(Collectors.toList());
+	}
+
+	public java.util.List<String> getPokemonesParaCombateDelEntrenador(int index) {
+	    ArrayList<Pokemon> pokemonesCombate = torneo.getEntrenadores().get(index).getPokemonesCombate();
+	    if (pokemonesCombate == null) {
+	        return new ArrayList<>(); // o Collections.emptyList();
+	    }
+	    return pokemonesCombate.stream()
+	                           .map(Pokemon::getNombre)
+	                           .collect(Collectors.toList());
+	}
+	
+	public void anadirPokemonACombate(int indexEntrenador, int indexPokemon) {
+		this.torneo.anadirPokemonACombate(indexEntrenador, indexPokemon);
+	}
+
+	public void quitarPokemonDeCombate(int indexEntrenador, int indexPokemon) {
+		this.torneo.quitarPokemonDeCombate(indexEntrenador, indexPokemon);
 	}
 }
 

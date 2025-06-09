@@ -58,6 +58,7 @@ public class Mercado implements Serializable{
 	        if (pokemon != null) {
 	            entrenador.setCreditos(entrenador.getCreditos() - valor);
 	            entrenador.agregarPokemon(pokemon);
+	            System.out.println(entrenador.getPokemones());
 	        }
 	    }
 

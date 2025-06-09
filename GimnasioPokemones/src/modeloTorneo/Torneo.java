@@ -8,6 +8,7 @@ import Mercados.Mercado;
 import modeloArenas.GestorDeArenas;
 import modeloBatalla.Batalla;
 import modeloEntrenador.Entrenador;
+import modeloPokemon.Pokemon;
 
 import java.io.Serializable;
 
@@ -98,11 +99,10 @@ public class Torneo extends Observable implements Serializable{
 	}
 	
 	public void iniciarRonda() throws InterruptedException {
-	    if(this.entrenadores.size()>1){
+		if(this.entrenadores.size()>1){
 	    	ArrayList<Batalla> batallas = new ArrayList<>();
 	    	ArrayList<Entrenador> ganadores = new ArrayList<>();
-
-	    	for (int i = 0; i < this.entrenadores.size(); i += 2) {
+	    	for (int i = 0; i < entrenadores.size(); i += 2) {
 	            Batalla batalla = new Batalla(this.entrenadores.get(i), this.entrenadores.get(i + 1), gestorDeArenas);
 	            batallas.add(batalla);
 	            batalla.start();
@@ -136,4 +136,27 @@ public class Torneo extends Observable implements Serializable{
     	setChanged();
         notifyObservers(entrenadores);
     }
+    
+	public void anadirPokemonACombate(int indexEntrenador, int indexPokemon) {
+	    Entrenador entrenador = this.getEntrenadores().get(indexEntrenador);
+	    Pokemon p = entrenador.getPokemones().get(indexPokemon);
+	    
+	    if (!entrenador.getPokemonesCombate().contains(p)) {
+	        entrenador.getPokemonesCombate().add(p);
+	        entrenador.getPokemones().remove(indexPokemon);
+	        this.setChanged();
+	        this.notifyObservers();
+	    }
+	}
+
+	public void quitarPokemonDeCombate(int indexEntrenador, int indexPokemon) {
+	    Entrenador entrenador = this.getEntrenadores().get(indexEntrenador);
+	    Pokemon p = entrenador.getPokemonesCombate().get(indexPokemon);
+	    
+	    entrenador.getPokemonesCombate().remove(indexPokemon);
+	    entrenador.getPokemones().add(p);
+	    this.setChanged();
+	    this.notifyObservers();
+	}
+	
 }

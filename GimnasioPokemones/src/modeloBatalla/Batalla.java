@@ -2,35 +2,17 @@ package modeloBatalla;
 
 import modeloArenas.GestorDeArenas;
 import modeloEntrenador.Entrenador;
-import modeloEntrenador.EntrenadorPreparado;
 import modeloArenas.IArena;
-import modeloExcepciones.EntrenadorSinPokemonesException;
 import modeloPokemon.Pokemon;
 public class Batalla extends Thread {
-	protected Entrenador entrenadorA;
-	protected Entrenador entrenadorB;
-	protected EntrenadorPreparado entrenador1;
-	protected EntrenadorPreparado entrenador2;
+	protected Entrenador entrenador1;
+	protected Entrenador entrenador2;
 	public Entrenador ganador = null;
     private GestorDeArenas gestorArenas;
 
     public Batalla(Entrenador entrenador1, Entrenador entrenador2, GestorDeArenas gestorArenas) {
-    	this.entrenadorA=entrenador1;
-		this.entrenadorB=entrenador2;
-		this.entrenador1 = new EntrenadorPreparado(entrenadorA.getNombre());
-		this.entrenador2 = new EntrenadorPreparado(entrenadorB.getNombre());
-		try {
-			this.entrenador1.preparaParaBatalla(this.entrenadorA);
-		}
-		catch(EntrenadorSinPokemonesException e){
-			System.out.println(e.getMessage());
-		}
-		try{
-			this.entrenador2.preparaParaBatalla(this.entrenadorB);
-		}
-		catch(EntrenadorSinPokemonesException e){
-			System.out.println(e.getMessage());
-		}
+    	this.entrenador1=entrenador1;
+		this.entrenador2=entrenador2;
         this.gestorArenas = GestorDeArenas.getInstance();
     }
 
@@ -38,10 +20,7 @@ public class Batalla extends Thread {
     public void run() { 
         try {
             IArena arena = gestorArenas.asignarArenaLibre();
-            this.ganador = enfrentarEntrenadores(entrenador1, entrenador2, arena);
-            /*
-             * ACA EL CONTROLADOR LE AVISA A LA VENTANA QUIEN ES EL GANADOR
-            */
+            this.ganador = enfrentarEntrenadores(this.entrenador1, this.entrenador2, arena);
             gestorArenas.liberarArena(arena);
         } catch (InterruptedException e) {
             System.out.println("Batalla interrumpida");
@@ -52,18 +31,18 @@ public class Batalla extends Thread {
 
 
     private Entrenador enfrentarEntrenadores(Entrenador entrenador1, Entrenador entrenador2, IArena arena){
-        if (entrenador1.pokemones.isEmpty()) {
+        if (entrenador1.getPokemonesCombate().isEmpty()) {
         	entrenador2.ganarDuelo(arena.getPremio());
             return entrenador2;
         }
-        if (entrenador2.pokemones.isEmpty()) {
+        if (entrenador2.getPokemonesCombate().isEmpty()) {
         	entrenador1.ganarDuelo(arena.getPremio());
         	return entrenador1;
         }
         int i = 0, j = 0;
-        while (i < 3 && i < entrenador1.pokemones.size() && j < 3 && j < entrenador2.pokemones.size()) {
-            Pokemon p1 = entrenador1.pokemones.get(i);
-            Pokemon p2 = entrenador2.pokemones.get(j);
+        while (i < 3 && i < entrenador1.getPokemonesCombate().size() && j < 3 && j < entrenador2.getPokemonesCombate().size()) {
+            Pokemon p1 = entrenador1.getPokemonesCombate().get(i);
+            Pokemon p2 = entrenador2.getPokemonesCombate().get(j);
 
             while (p1.estaVivo() && p2.estaVivo()) {
                 p1.atacar(p2);
@@ -80,11 +59,21 @@ public class Batalla extends Thread {
             }
         }
 
-        if (i == 3 || i >= entrenador1.pokemones.size()) {
+        if (i == 3 || i >= entrenador1.getPokemonesCombate().size()) {
             entrenador2.ganarDuelo(arena.getPremio());
+            for(Pokemon pokemon : entrenador2.getPokemonesCombate()) {
+            	pokemon.recargar();
+            	entrenador2.pokemones.add(pokemon);
+            }
+            entrenador2.getPokemonesCombate().clear();
             return entrenador2;
         } else {
             entrenador1.ganarDuelo(arena.getPremio());
+            for(Pokemon pokemon : entrenador1.getPokemonesCombate()){
+            	pokemon.recargar();
+            	entrenador1.pokemones.add(pokemon);
+            }
+            entrenador1.getPokemonesCombate().clear();
             return entrenador1;
         }
     }

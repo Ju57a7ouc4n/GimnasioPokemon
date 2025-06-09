@@ -25,6 +25,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
@@ -255,6 +256,7 @@ public class Ventana_Gimnasio extends JFrame implements ActionListener, Observer
 		    this.panel.add(labelSeleccion);
 		    this.panel.add(entrenadorCombo);
 		    
+		    
 		 // ======= COMPRA DE ARMAS =======
 		    JLabel tituloArma = new JLabel("Compra de Armas");
 		    tituloArma.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -264,6 +266,8 @@ public class Ventana_Gimnasio extends JFrame implements ActionListener, Observer
 
 		    JButton comprarArmaButton = new JButton("Comprar Arma");
 		    comprarArmaButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		    armaCombo.setEnabled(false);
+	    	comprarArmaButton.setEnabled(false);
 		    comprarArmaButton.addActionListener(ev -> {
 		        String entrenadorNombre = (String) entrenadorCombo.getSelectedItem();
 		        if (entrenadorNombre.equals("-- Seleccionar --")) {
@@ -274,7 +278,7 @@ public class Ventana_Gimnasio extends JFrame implements ActionListener, Observer
 		        String arma = (String) armaCombo.getSelectedItem();
 		        if(arma.equals("Espada")| arma.equals("Hacha")) {
 		        	try {
-		        		//controlador.comprarArma(entrenadorNombre, arma); // ← lógica real
+		        		controlador.comprarArma(entrenadorNombre, arma); // ← lógica real
 		        		JOptionPane.showMessageDialog(this, entrenadorNombre + " compró un arma: " + arma);
 
 		        		armaCombo.setEnabled(false);
@@ -291,7 +295,18 @@ public class Ventana_Gimnasio extends JFrame implements ActionListener, Observer
 
 		    JComboBox<String> tipoCombo = new JComboBox<>(new String[]{"Agua", "Fuego", "Hielo", "Piedra"});
 		    tipoCombo.setMaximumSize(new Dimension(200, 30));
-
+		    tipoCombo.addItemListener(u -> {
+		        if (u.getStateChange() == ItemEvent.SELECTED) {
+		            String tipoSeleccionado = (String) tipoCombo.getSelectedItem();
+		            if (tipoSeleccionado.equalsIgnoreCase("Piedra")) {
+		                armaCombo.setEnabled(true);
+		                comprarArmaButton.setEnabled(true);
+		            } else {
+		                armaCombo.setEnabled(false);
+		                comprarArmaButton.setEnabled(false);
+		            }
+		        }
+		    });
 		    JLabel nombreLabel = new JLabel("Nombre Pokémon");
 		    nombreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -318,15 +333,6 @@ public class Ventana_Gimnasio extends JFrame implements ActionListener, Observer
 		        try {
 		            controlador.comprarPokemon(entrenadorNombre, tipo, nombre); // ← lógica real
 		            JOptionPane.showMessageDialog(this, entrenadorNombre + " compró un Pokémon de tipo " + tipo + " llamado " + nombre);
-
-		            // Solo si es tipo Piedra, habilitá la compra de arma
-		            if (tipo.equalsIgnoreCase("Piedra")) {
-		                armaCombo.setEnabled(true);
-		                comprarArmaButton.setEnabled(true);
-		            } else {
-		                armaCombo.setEnabled(false);
-		                comprarArmaButton.setEnabled(false);
-		            }
 
 		            nombrePokemon.setText(""); // Limpiar campo
 		        } catch (Exception ex) {
@@ -396,7 +402,7 @@ public class Ventana_Gimnasio extends JFrame implements ActionListener, Observer
 	    }
 
 	    if (e.getSource() == this.Entra_Torneo_Button) {
-	        new Ventana_Torneo();
+	        new Ventana_Preparar_Entrenadores(controlador).setVisible(true);;
 	        dispose();
 	    }
 	}

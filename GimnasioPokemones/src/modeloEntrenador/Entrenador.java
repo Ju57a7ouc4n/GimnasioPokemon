@@ -1,6 +1,8 @@
 package modeloEntrenador;
 
 import java.util.ArrayList;
+
+import modeloExcepciones.CompraImposibleException;
 import modeloInterfaces.Clasificable;
 import modeloPokemon.Pokemon;
 
@@ -12,7 +14,8 @@ import modeloPokemon.Pokemon;
 public class Entrenador implements Clasificable, Cloneable, java.io.Serializable {
 
     private String nombre;
-    public ArrayList<Pokemon> pokemones;
+    public ArrayList<Pokemon> pokemones = new ArrayList<>();
+    private ArrayList<Pokemon> pokemonesCombate = new ArrayList<>();
     private int creditos;
 
     /**
@@ -24,11 +27,31 @@ public class Entrenador implements Clasificable, Cloneable, java.io.Serializable
      */
     public Entrenador(String nombre) {
         this.nombre = nombre;
-        this.creditos = 200; //Creditos iniciales
+        this.creditos = 1500; //Creditos iniciales
         this.pokemones = new ArrayList<>();
+        this.pokemonesCombate = new ArrayList<>();
     }
 
-    /**
+    public ArrayList<Pokemon> getPokemones() {
+		return pokemones;
+	}
+
+	public void setPokemones(ArrayList<Pokemon> pokemones) {
+		this.pokemones = pokemones;
+	}
+
+	public ArrayList<Pokemon> getPokemonesCombate() {
+	    if (pokemonesCombate == null) {
+	        pokemonesCombate = new ArrayList<>();
+	    }
+	    return pokemonesCombate;
+	}
+
+	public void setPokemonesCombate(ArrayList<Pokemon> pokemonesCombate) {
+		this.pokemonesCombate = pokemonesCombate;
+	}
+
+	/**
      * Agrega un Pokémon a la lista del entrenador.
      * 
      * @param pokemon Pokémon a agregar.
@@ -115,12 +138,15 @@ public class Entrenador implements Clasificable, Cloneable, java.io.Serializable
      * Metodo que busca en la lista de pokemones del entrenador un pokemon armable.
      * @return si existe devuelve la posicion y si no existe devuelve la posicion invalida -1.
      */
-    public int buscaPokemonArmable() {
+    public int buscaPokemonArmable() throws CompraImposibleException{
         int i=0;
         while (i<pokemones.size() && (((pokemones.get(i).Esarmable()) && (pokemones.get(i).getArma() != null)) || (!(pokemones.get(i).Esarmable())))) {
             i++;
         }
-        return i<pokemones.size() ? i : -1;
+        if(i<pokemones.size())
+        	return  i;
+        else
+        	throw new CompraImposibleException(creditos, i, nombre);
     }
     
     /**
@@ -129,5 +155,20 @@ public class Entrenador implements Clasificable, Cloneable, java.io.Serializable
     @Override
     public String toString() {
         return "\nEntrenador " + this.nombre + "\n" + "Creditos " + this.creditos + "\n" + "Categoria " + this.getCategoria(); 
+    }
+    
+    public Pokemon buscarPokemon(String pokemon){
+    	int i=0;
+		while(pokemones.get(i)!=null && i<pokemones.size() && pokemones.get(i).getNombre().equals(nombre))
+			i++;
+		if(pokemones.get(i).getNombre().equals(nombre))
+			return pokemones.get(i);
+		else
+			return null;
+    }
+    
+    public void elegirPokemonCombate(String pokemon){
+    	Pokemon aux = this.buscarPokemon(pokemon);
+    	this.pokemonesCombate.add(aux);
     }
 }
