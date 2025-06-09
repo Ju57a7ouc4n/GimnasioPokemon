@@ -353,11 +353,11 @@ public class Ventana_Gimnasio extends JFrame implements ActionListener, Observer
 		    });
 		    
 		    // ======= Agregar todo al panel =======
-		  /*  panel_Compras.add(Box.createVerticalStrut(10));
+		    panel_Compras.add(Box.createVerticalStrut(10));
 		    panel_Compras.add(labelSeleccion);
 		    panel_Compras.add(entrenadorCombo);
 		    panel_Compras.add(Box.createVerticalStrut(20));
-		   */ 
+		   
 		    panel_Compras.add(tituloPokemon);
 		    panel_Compras.add(tipoCombo);
 		    panel_Compras.add(nombreLabel);
@@ -504,7 +504,7 @@ public class Ventana_Gimnasio extends JFrame implements ActionListener, Observer
 	    }
 
 	    if (e.getSource() == this.Entra_Torneo_Button) {
-	        new Ventana_Preparar_Entrenadores(controlador).setVisible(true);;
+	        new Ventana_Preparar_Entrenadores(controlador).setVisible(true);
 	        dispose();
 	    }
 	}

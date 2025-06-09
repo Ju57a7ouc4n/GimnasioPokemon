@@ -5,9 +5,11 @@ import java.util.Observable;
 import java.util.Observer;
 
 import Mercados.Mercado;
+import Vista.Ventana_Batallas;
 import modeloArenas.GestorDeArenas;
 import modeloBatalla.Batalla;
 import modeloEntrenador.Entrenador;
+import modeloModificaciones.TextAreaObserver;
 import modeloPokemon.Pokemon;
 
 import java.io.Serializable;
@@ -98,13 +100,14 @@ public class Torneo extends Observable implements Serializable{
 		return this.tienda;
 	}
 	
-	public void iniciarRonda() throws InterruptedException {
+	public void iniciarRonda(ArrayList<TextAreaObserver> vista) throws InterruptedException{
 		if(this.entrenadores.size()>1){
 	    	ArrayList<Batalla> batallas = new ArrayList<>();
 	    	ArrayList<Entrenador> ganadores = new ArrayList<>();
 	    	for (int i = 0; i < entrenadores.size(); i += 2) {
 	            Batalla batalla = new Batalla(this.entrenadores.get(i), this.entrenadores.get(i + 1), gestorDeArenas);
 	            batallas.add(batalla);
+	            batalla.getObservable().addObserver(vista.get(i));
 	            batalla.start();
 	    	}
 
@@ -118,6 +121,8 @@ public class Torneo extends Observable implements Serializable{
 	    }
 	    else
 	    	this.ganadorDelTorneo= this.entrenadores.get(0);
+		setChanged();
+		notifyObservers("batallas_finalizadas");
 	}
 	
     public void añadirEntrenador(Entrenador e) {

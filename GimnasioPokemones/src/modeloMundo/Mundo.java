@@ -11,10 +11,13 @@ import Vista.Ventana_Batallas;
 import Vista.Ventana_Gimnasio;
 import Vista.Ventana_Inicio;
 import Vista.Ventana_Preparar_Entrenadores;
+import Vista.Ventana_Tienda;
 import modeloArenas.GestorDeArenas;
 import modeloArenas.IArena;
+import modeloBatalla.Batalla;
 import modeloEntrenador.Entrenador;
 import modeloExcepciones.CompraImposibleException;
+import modeloModificaciones.TextAreaObserver;
 import modeloPokemon.Pokemon;
 import modeloSerializador.SerializadorInput;
 import modeloSerializador.SerializadorOutput;
@@ -97,6 +100,12 @@ public class Mundo{
 	    torneo.forzarActualizacion();
 	}
 	
+	public void iniciarTienda(Ventana_Tienda vista) {
+		torneo.deleteObservers();
+		torneo.addObserver(vista);
+	    torneo.forzarActualizacion();
+	}
+	
 	public void iniciarBatallas(Ventana_Batallas vista) {
 		torneo.deleteObservers();
 		torneo.addObserver(vista);
@@ -128,8 +137,8 @@ public class Mundo{
 		torneo.forzarActualizacion();
 	}
 	
-	public void iniciarRonda() throws InterruptedException{
-		this.torneo.iniciarRonda();
+	public void iniciarRonda(ArrayList<TextAreaObserver> vista) throws InterruptedException{
+		this.torneo.iniciarRonda(vista);
 	}
 	
 	public void prepararEntrenador(String entrenador, String pokemon){

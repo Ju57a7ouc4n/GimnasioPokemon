@@ -8,12 +8,14 @@ import javax.swing.border.EmptyBorder;
 
 import modeloArenas.Arena;
 import modeloArenas.IArena;
+import modeloModificaciones.TextAreaObserver;
 import modeloMundo.Mundo;
 
 import javax.swing.BoxLayout;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -36,7 +38,7 @@ public class Ventana_Batallas extends JFrame implements Observer{
 	private JTextArea textArea_3;
 	private JTextArea textArea;
 	private JTextArea textArea_1;
-	private List<JTextArea> areasTexto;
+	public ArrayList<TextAreaObserver> areasTexto= new ArrayList<>();
 	private JTextArea textArea_2;
 	private static Mundo controlador;
 	/**
@@ -57,8 +59,9 @@ public class Ventana_Batallas extends JFrame implements Observer{
 
 	/**
 	 * Create the frame.
+	 * @throws InterruptedException 
 	 */
-	public Ventana_Batallas(Mundo control) {
+	public Ventana_Batallas(Mundo control){
 		controlador = control;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1081, 685);
@@ -73,9 +76,21 @@ public class Ventana_Batallas extends JFrame implements Observer{
 		
 		this.ContinuarButton = new JButton("Iniciar Proxima Ronda");
 		this.panel.add(this.ContinuarButton);
+		ContinuarButton.addActionListener(e -> {
+		    new Ventana_Preparar_Entrenadores(control).setVisible(true);
+		    this.dispose();
+		});
 		
 		this.AbrirTiendaButton = new JButton("Abrir Tienda");
 		this.panel.add(this.AbrirTiendaButton);
+		AbrirTiendaButton.addActionListener(e -> {
+			Ventana_Tienda ventanaTienda = new Ventana_Tienda(this, controlador);
+		    ventanaTienda.setVisible(true);
+		});
+		
+		
+		ContinuarButton.setEnabled(false);
+		AbrirTiendaButton.setEnabled(false);
 		
 		this.panel_1 = new JPanel();
 		this.contentPane.add(this.panel_1, BorderLayout.CENTER);
@@ -87,6 +102,8 @@ public class Ventana_Batallas extends JFrame implements Observer{
 		
 		this.textArea = new JTextArea();
 		this.panel_5.add(this.textArea);
+		TextAreaObserver observerArea = new TextAreaObserver(this.textArea);
+		this.areasTexto.add(observerArea);
 		
 		this.panel_4 = new JPanel();
 		this.panel_1.add(this.panel_4);
@@ -94,6 +111,9 @@ public class Ventana_Batallas extends JFrame implements Observer{
 		
 		this.textArea_1 = new JTextArea();
 		this.panel_4.add(this.textArea_1);
+		TextAreaObserver observerArea1 = new TextAreaObserver(this.textArea_1);
+		this.areasTexto.add(observerArea1);
+		
 		
 		this.panel_3 = new JPanel();
 		this.panel_1.add(this.panel_3);
@@ -101,6 +121,8 @@ public class Ventana_Batallas extends JFrame implements Observer{
 		
 		this.textArea_2 = new JTextArea();
 		this.panel_3.add(this.textArea_2);
+		TextAreaObserver observerArea2 = new TextAreaObserver(this.textArea_2);
+		this.areasTexto.add(observerArea2);
 		
 		this.panel_2 = new JPanel();
 		this.panel_1.add(this.panel_2);
@@ -108,37 +130,28 @@ public class Ventana_Batallas extends JFrame implements Observer{
 		
 		this.textArea_3 = new JTextArea();
 		this.panel_2.add(this.textArea_3);
+		TextAreaObserver observerArea3 = new TextAreaObserver(this.textArea_3);
+		this.areasTexto.add(observerArea3);
 		
 		controlador.iniciarBatallas(this);
-		areasTexto = List.of(textArea, textArea_1, textArea_2, textArea_3);
 
-	    controlador.iniciarBatallas(this);
-
-	    actualizarPanelesConArenas();
+	    try {
+			controlador.iniciarRonda(areasTexto);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-	    actualizarPanelesConArenas();
-	}
-	
-	private void actualizarPanelesConArenas() {
-	    List<IArena> arenas = controlador.getArenas();
-
-	    for (int i = 0; i < areasTexto.size(); i++) {
-	        JTextArea area = areasTexto.get(i);
-
-	        if (i < arenas.size()) {
-	            IArena arena = arenas.get(i);
-
-	            // Ejemplo: mostrar nombre y algún detalle
-	            String texto = "Nombre: " + arena.getNombre() + "\n";
-
-	            area.setText(texto);
-	        } else {
-	            area.setText("Sin arena asignada");
-	        }
+	    if (arg instanceof String mensaje && mensaje.equals("batallas_finalizadas")) {
+	        habilitarBotones();
 	    }
+	}
+
+	public void habilitarBotones() {
+	    ContinuarButton.setEnabled(true);
+	    AbrirTiendaButton.setEnabled(true);
 	}
 
 }

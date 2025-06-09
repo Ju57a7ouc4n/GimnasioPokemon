@@ -71,7 +71,7 @@ public class Ventana_Preparar_Entrenadores extends JFrame implements ActionListe
 		
 		this.IniciarCombatesButton = new JButton("Iniciar Combates");
 		this.PanelEntrenadores.add(this.IniciarCombatesButton, BorderLayout.SOUTH);
-		
+		IniciarCombatesButton.addActionListener(this);
 		
 		
 		
@@ -149,7 +149,7 @@ public class Ventana_Preparar_Entrenadores extends JFrame implements ActionListe
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e){
 	    Object source = e.getSource();
 
 	    int indexEntrenador = this.ListaDeEntrenadores.getSelectedIndex();
@@ -172,8 +172,8 @@ public class Ventana_Preparar_Entrenadores extends JFrame implements ActionListe
 	        }
 	    }
 	    if (source == this.IniciarCombatesButton) {
-	        new Ventana_Batallas(controlador).setVisible(true);;
-	        dispose();
+			new Ventana_Batallas(controlador).setVisible(true);
+	        this.dispose();
 	    }
 	}
 
