@@ -1,7 +1,8 @@
 package modeloArenas;
 
+import java.io.Serializable;
 
-public class ArenaSelva extends Arena {
+public class ArenaSelva extends Arena implements Serializable {
 
     public ArenaSelva(String nombre) {
         super(nombre);

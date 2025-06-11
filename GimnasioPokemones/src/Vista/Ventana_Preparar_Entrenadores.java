@@ -66,12 +66,12 @@ public class Ventana_Preparar_Entrenadores extends JFrame implements ActionListe
 		this.PanelEntrenadores.setBorder(BorderFactory.createTitledBorder("Entrenador"));
 		this.PanelEntrenadores.setLayout(new BorderLayout(0, 0));
 		
-		this.ListaDeEntrenadores = new JList();
+		this.ListaDeEntrenadores = new JList<String>();
 		this.PanelEntrenadores.add(this.ListaDeEntrenadores, BorderLayout.CENTER);
 		
 		this.IniciarCombatesButton = new JButton("Iniciar Combates");
 		this.PanelEntrenadores.add(this.IniciarCombatesButton, BorderLayout.SOUTH);
-		IniciarCombatesButton.addActionListener(this);
+		this.IniciarCombatesButton.addActionListener(this);
 		
 		
 		
@@ -80,7 +80,7 @@ public class Ventana_Preparar_Entrenadores extends JFrame implements ActionListe
 		this.PanelPokemonesDisponibles.setBorder(BorderFactory.createTitledBorder("Pokemones Disponibles"));
 		this.PanelPokemonesDisponibles.setLayout(new BorderLayout(0, 0));
 		
-		this.ListaDePokemonesDisponibles = new JList();
+		this.ListaDePokemonesDisponibles = new JList<String>();
 		this.PanelPokemonesDisponibles.add(this.ListaDePokemonesDisponibles, BorderLayout.CENTER);
 		this.ListaDeEntrenadores.addListSelectionListener(e -> {
 		    if (!e.getValueIsAdjusting()) {
@@ -112,7 +112,7 @@ public class Ventana_Preparar_Entrenadores extends JFrame implements ActionListe
 		this.PanelPokemonesCombate.setBorder(BorderFactory.createTitledBorder("Pokemones Para Combatir"));
 		this.PanelPokemonesCombate.setLayout(new BorderLayout(0, 0));
 		
-		this.ListaDePokemonesParaCombate = new JList();
+		this.ListaDePokemonesParaCombate = new JList<String>();
 		this.PanelPokemonesCombate.add(this.ListaDePokemonesParaCombate, BorderLayout.CENTER);
 		
 		this.QuitarDelCombateButton = new JButton("Quitar del Combate");
@@ -154,9 +154,6 @@ public class Ventana_Preparar_Entrenadores extends JFrame implements ActionListe
 
 	    int indexEntrenador = this.ListaDeEntrenadores.getSelectedIndex();
 
-	    if (indexEntrenador == -1) {
-	        return; // No hay entrenador seleccionado
-	    }
 
 	    if (source == this.AnadirACombateButton) {
 	        int indexPokemon = this.ListaDePokemonesDisponibles.getSelectedIndex();
@@ -172,9 +169,13 @@ public class Ventana_Preparar_Entrenadores extends JFrame implements ActionListe
 	        }
 	    }
 	    if (source == this.IniciarCombatesButton) {
-			new Ventana_Batallas(controlador).setVisible(true);
-	        this.dispose();
+	    	System.out.println("Esta por crearse la ventana");
+	    	new Ventana_Batallas(controlador).setVisible(true);
+			System.out.println("Se creó la ventana");
+	        dispose();
+	        System.out.println("Se cerro la primer ventana ventana");
 	    }
+	    
 	}
 
 }

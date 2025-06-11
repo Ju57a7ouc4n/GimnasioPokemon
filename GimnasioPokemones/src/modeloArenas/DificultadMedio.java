@@ -1,6 +1,8 @@
 package modeloArenas;
 
-public class DificultadMedio extends Decorator{
+import java.io.Serializable;
+
+public class DificultadMedio extends Decorator implements Serializable{
 
     public DificultadMedio(IArena Arena){
         super(Arena);

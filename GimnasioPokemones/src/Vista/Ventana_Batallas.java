@@ -22,6 +22,7 @@ import java.util.Observer;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 public class Ventana_Batallas extends JFrame implements Observer{
 
@@ -133,13 +134,16 @@ public class Ventana_Batallas extends JFrame implements Observer{
 		TextAreaObserver observerArea3 = new TextAreaObserver(this.textArea_3);
 		this.areasTexto.add(observerArea3);
 		
-		controlador.iniciarBatallas(this);
-
-	    try {
-			controlador.iniciarRonda(areasTexto);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
+		SwingUtilities.invokeLater(() -> {
+		    controlador.iniciarBatallas(this);
+		    new Thread(() -> {
+		        try {
+		            controlador.iniciarRonda(areasTexto);
+		        } catch (InterruptedException e1) {
+		            e1.printStackTrace();
+		        }
+		    }).start();
+		});
 	}
 
 	@Override
